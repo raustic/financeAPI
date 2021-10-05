@@ -1,0 +1,61 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+@Entity()
+export class borrower{
+    @ApiProperty()
+    @PrimaryGeneratedColumn()
+    id:number
+    @ApiProperty()
+    @Column()
+    name:string
+    @ApiProperty()
+    @Column()
+    mobile:string 
+    @ApiProperty()  
+    @Column()
+    watsappNumber:string
+    @ApiProperty()
+    @Column()
+    email:string
+    @ApiProperty()
+    @Column()
+    addressLine1:string 
+    @ApiProperty()
+    @Column()
+    addressLine2:string 
+    @ApiProperty()
+    @Column()
+    zip:string
+    @ApiProperty()
+    @Column()
+    state:string
+    @ApiProperty()
+    @Column()
+    ReferencedBy:string 
+    @ApiProperty()
+    @Column()
+    CreatedBy:string
+    @ApiProperty()
+    @Column()
+    CreatedAt:Date
+    @ApiProperty()
+    @Column()
+    IsActive:number  
+    @ApiProperty()
+    @Column()
+    Designation:string 
+    @ApiProperty()
+    @Column()
+    ProfileImg:string
+    @ApiProperty()
+    @Column()
+    aadharfrontImg:string
+    @ApiProperty()
+    @Column()
+    aadharbackImg:string
+    @ApiProperty()
+    @Column()
+    otherImg:string
+
+}

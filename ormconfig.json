@@ -1,0 +1,13 @@
+{
+    "type": "mysql",
+    "host": "financeapp.cbi1cfkngg0h.us-east-2.rds.amazonaws.com",
+    "port": 3306,
+    "username": "root",
+    "password": "financeapp",
+    "database": "financeapp",
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "synchronize": true
+  }
+
+
+ 

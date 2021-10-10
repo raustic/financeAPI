@@ -19,54 +19,61 @@ export class borrowertrans{
     @ApiProperty()
     @Column()
     returnAmt:number
-   
     @Column()
     @ApiProperty()
-    PayingDate:string
-    @Column()
-    @ApiProperty()
-    ReturnDate1:string
-    @Column()
-    @ApiProperty()
-    ReturnDate2:string  
-    @Column()
-    @ApiProperty()
-    ReturnDate3?:string
-    @Column()
-    @ApiProperty()
-    ReturnDate4?:string
-    @Column()
-    @ApiProperty()
-    ReturnDate5?:string
-    @Column()
-    @ApiProperty()
-    ReturnDate6?:string
-    @Column()
-    @ApiProperty()
-    ReturnDate7?:string
+    term:string
     @ApiProperty()
     @Column()
-    ReturnDate8?:string
+    terminDays:number
     @Column()
-    @ApiProperty()
-    ReturnDate9?:string
-    @Column()
-    @ApiProperty()
-    ReturnDate10?:string
-    @Column()
-    @ApiProperty()
-    ReturnDate11?:string
-    @Column()
-    @ApiProperty()
-    ReturnDate12?:string
-    @Column()
-    @ApiProperty({
-        description:"Input return Type like One Time Two Time"
-    })
-    ReturnType:string
-    @ApiProperty()
-    @Column()
-    transType:string
+    returnDate:Date
+    // @Column()
+    // @ApiProperty()
+    // PayingDate:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate1:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate2:string  
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate3?:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate4?:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate5?:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate6?:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate7?:string
+    // @ApiProperty()
+    // @Column()
+    // ReturnDate8?:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate9?:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate10?:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate11?:string
+    // @Column()
+    // @ApiProperty()
+    // ReturnDate12?:string
+   // @Column()
+   // @ApiProperty({
+     //   description:"Input return Type like One Time Two Time"
+    //})
+    //ReturnType:string
+    //@ApiProperty()
+    //@Column()
+    //transType:string
     @Column()
     @ApiProperty()
     Remark:string

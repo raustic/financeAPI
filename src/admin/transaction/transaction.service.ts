@@ -111,11 +111,8 @@ export class TransactionService {
         //       `;
 
         
-       var query=`
-        select returnAmt ,date_format(curdate(),'%d-%m-%Y') as Date,borrowerId,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt,date_format(ReturnDate1,'%d-%m-%Y') as returnDate from borrowertrans where borrowerid=${borrowerId} and(
-          Date(ReturnDate1)>=curdate()||Date(ReturnDate2)>=curdate()||Date(ReturnDate3)>=curdate()||ReturnDate4>=curdate()||
-          ReturnDate5>=curdate()||ReturnDate6>=curdate()||ReturnDate7>=curdate()||ReturnDate8>=curdate()||
-          ReturnDate9>=curdate()||ReturnDate10>=curdate()||ReturnDate1>=curdate()||ReturnDate12>=curdate())`;
+       var query=`select * from borrower_trans_return where Date(ReturnDate)<=curdate() and IsTreasurerApproved=0 and IsAdminApproved=0
+       `;
           let data=await _manager.query(query);
           
         return data;    
@@ -126,7 +123,7 @@ export class TransactionService {
         const _manager=getManager();
         var query=`select (select sum(amount) from borrowertrans where borrowerid=${borrowerid}) as givenamt,
         (select sum(returnAmt) from borrowertrans where borrowerid=${borrowerid}) as totalReturnAmt,
-        (select ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=${borrowerid}) as receivedamt
+        (select ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=${borrowerid} and isAdminApproved=1 and IsTreasurerApproved=1) as receivedamt
          from borrowertrans limit 1`;
          return _manager.query(query);
     }
@@ -134,9 +131,9 @@ export class TransactionService {
     async GetBorrowerAllTransaction(borrowerId:number):Promise<any[]>
     {
         const _manager=getManager();
-        var query=`select amount,date_format(ReturnDate1,'%d-%m-%Y') as ReturnDate,'give'as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrowertrans where borrowerid=${borrowerId}
+        var query=`select amount,date_format(ReturnDate,'%d-%m-%Y') as ReturnDate,'give'as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrowertrans where borrowerid=${borrowerId}
         union
-        select returnAmt,date_format(ReturnDate,'%d-%m-%Y') as  ReturnDate,'receive' as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrower_trans_return where borrowerid=${borrowerId}
+        select returnAmt,date_format(ReturnDate,'%d-%m-%Y') as  ReturnDate,'receive' as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrower_trans_return where borrowerid=${borrowerId} and IsTreasurerApproved=1 and IsAdminApproved=1
         `;
         var data=_manager.query(query);
         return data;
@@ -145,10 +142,98 @@ export class TransactionService {
 
     async CreateBorrowerTrans(entity:borrowertrans):Promise<any>{
         var  _res=new ResponseMessage();
+        
+            const _manager=getManager();
+            
         try{
             
             this._borrowerTrans.create(entity);
-            this._borrowerTrans.save(entity);
+          let data=await  this._borrowerTrans.save(entity);
+            
+
+            let query='';
+            switch(entity.term) 
+            {
+                case '1':
+                    for(let i=0;i<entity.terminDays;i++)   
+                    {
+                        
+                        query=`
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${i} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                     _manager.query(query);
+                        
+                    }    
+                break;
+                
+                case '7':
+                    console.log("im in 7 case");
+                    let interval=0;
+                    for(let i=1;i<=entity.terminDays;i++)   
+                    {
+                        
+                        
+                        query=`
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                     _manager.query(query);
+                     interval+=7;
+                        
+                    }       
+                break;
+                case '10':
+                    let interval1=0;
+                    for(let i=1;i<=entity.terminDays;i++)   
+                    {
+                        
+                        
+                        query=`
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval1} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                     _manager.query(query);
+                        interval1+=10;
+                    }     
+                break;
+                case '20':
+                    let interval2=0;
+                    for(let i=1;i<=entity.terminDays;i++)   
+                    {
+                        
+                        
+                        query=`
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval2} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                     _manager.query(query);
+                        interval2+=20;
+                    }     
+                break;
+                case '15':
+                    let interval3=0;
+                    for(let i=1;i<=entity.terminDays;i++)   
+                    {
+                        query=`
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval3} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                     _manager.query(query);
+                     interval3+=15;
+                        
+                    }     
+                break;
+                case '30':
+                    
+                    let interval4=0;
+                    for(let i=1;i<=entity.terminDays;i++)   
+                    {
+                        
+                        
+                        query=`
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval4} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                     _manager.query(query);
+                        interval4+=30;
+                    }     
+                break;
+            } 
             _res.status=true;
             _res.message="Borrower Transaction Made Successfully";
         }
@@ -225,33 +310,11 @@ export class TransactionService {
         try{
             var query=`
             select A.*,B.* from borrowertrans as A join borrower as B on A.borrowerId=B.id
-             where returndate1=curdate() or
-            returndate2=curdate() or
-            returndate3=curdate() or
-            returndate4=curdate() or
-            returndate5=curdate() or
-            returndate6=curdate() or
-            returndate7=curdate() or
-            returndate8=curdate() or
-            returndate9=curdate() or
-            returndate10=curdate() or
-            returndate11=curdate() or
-            returndate12=curdate() `;
+             where returndate=curdate()`;
 
             var toadyOepning=`
             select sum(amount) as opening from borrowertrans
-            where returndate1=curdate() or
-           returndate2=curdate() or
-           returndate3=curdate() or
-           returndate4=curdate() or
-           returndate5=curdate() or
-           returndate6=curdate() or
-           returndate7=curdate() or
-           returndate8=curdate() or
-           returndate9=curdate() or
-           returndate10=curdate() or
-           returndate11=curdate() or
-           returndate12=curdate()`;
+            where returndate=curdate()`;
            var tdyClosing=`
            select sum(returnAmt) as closing from borrower_trans_return where returndate=curdate()`;
             const _manager=getManager();

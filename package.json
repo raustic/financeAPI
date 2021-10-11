@@ -38,6 +38,7 @@
     "rxjs": "^6.6.6",
     "socket.io": "^4.2.0",
     "swagger-ui-express": "^4.1.6",
+    "to-words": "^3.0.0",
     "typeorm": "^0.2.34"
   },
   "devDependencies": {

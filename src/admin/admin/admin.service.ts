@@ -140,8 +140,8 @@ export class AdminService {
                 case 'az':
                 var query=`
                 select id,name,watsappnumber,email,mobile,addressline1,addressline2,zip,state,referencedBy,createdBy,date_format(createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,isactive,designation,profileImg,aadharfrontimg,aadharbackimg,otherimg,
-                ((select ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.Id)-
-                (select sum(returnAmt) from borrowertrans where borrowerid=A.id)) as Bal from borrower as A order by name`;  
+                ((select ifnull(sum(returnAmt),0) from borrowertrans where borrowerid=A.id)-(select  ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.id and IsAdminApproved=1 and IsTreasurerApproved=1))as Bal
+                 from borrower as A order by name`;  
                     const user=await _manager.query(query);
                      
                     if(Array(user).length>0)
@@ -155,8 +155,8 @@ export class AdminService {
                 case 'za':
                     var query1=`
                     select A.id,A.name,A.watsappnumber,A.email,A.mobile,A.addressline1,A.addressline2,A.zip,A.state,A.referencedBy,A.createdBy,date_format(A.createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,A.isactive,A.designation,A.profileImg,A.aadharfrontimg,A.aadharbackimg,A.otherimg,
-                    ((select ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.Id)-
-                                       (select sum(returnAmt) from borrowertrans where borrowerid=A.id)) as Bal from borrower as A order by name desc  
+                    ((select ifnull(sum(returnAmt),0) from borrowertrans where borrowerid=A.id)-(select  ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.id and IsAdminApproved=1 and IsTreasurerApproved=1))as Bal
+                    from borrower as A order by name desc  
                                    `;
                        const user1=await _manager.query(query1);
                      
@@ -175,8 +175,9 @@ export class AdminService {
                 // ((select sum(returnAmt)from borrower_trans_return where borrowerid=A.Id)-
                 // (select sum(amount) from borrowertrans where borrowerid=A.id)) as Bal
                 // from borrower as A order by bal`  
-                var query2=`select id,name,watsappnumber,email,mobile,addressline1,addressline2,zip,state,referencedBy,createdBy,date_format(createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,isactive,designation,profileImg,aadharfrontimg,aadharbackimg,otherimg,((select sum(returnAmt)from borrower_trans_return where borrowerid=A.Id)-
-                (select sum(returnAmt) from borrowertrans where borrowerid=A.id)) as Bal from borrower as A order by bal `; 
+                var query2=`select id,name,watsappnumber,email,mobile,addressline1,addressline2,zip,state,referencedBy,createdBy,date_format(createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,isactive,designation,profileImg,aadharfrontimg,aadharbackimg,otherimg,
+                ((select ifnull(sum(returnAmt),0) from borrowertrans where borrowerid=A.id)-(select  ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.id and IsAdminApproved=1 and IsTreasurerApproved=1))as Bal
+                from borrower as A order by bal `; 
                 var data=await _manager.query(query2); 
                 if(Array(data).length>0)
                 {
@@ -192,8 +193,9 @@ export class AdminService {
                 // ((select sum(returnAmt)from borrower_trans_return where borrowerid=A.Id)-
                 // (select sum(amount) from borrowertrans where borrowerid=A.id)) as Bal
                 // from borrower as A order by bal desc`
-                var query3=`select id,name,watsappnumber,email,mobile,addressline1,addressline2,zip,state,referencedBy,createdBy,date_format(createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,isactive,designation,profileImg,aadharfrontimg,aadharbackimg,otherimg,((select sum(returnAmt)from borrower_trans_return where borrowerid=A.Id)-
-                (select sum(returnAmt) from borrowertrans where borrowerid=A.id)) as Bal from borrower as A order by bal desc`;    
+                var query3=`select id,name,watsappnumber,email,mobile,addressline1,addressline2,zip,state,referencedBy,createdBy,date_format(createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,isactive,designation,profileImg,aadharfrontimg,aadharbackimg,otherimg,
+                ((select ifnull(sum(returnAmt),0) from borrowertrans where borrowerid=A.id)-(select  ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.id and IsAdminApproved=1 and IsTreasurerApproved=1))as Bal
+                from borrower as A order by bal desc`;    
                 var data1=await _manager.query(query3);
                 if(Array(data1).length>0)
                 {
@@ -762,7 +764,12 @@ async SaveImage(dto:imageUploadDto):Promise<any>
                     }
     }   
 
-
+    async ConvertWords(fig:number):Promise<any>
+    {
+        var convertRupeesIntoWords = require('convert-rupees-into-words');
+        var output = convertRupeesIntoWords(fig);
+        return output;
+    }
 
 
 }

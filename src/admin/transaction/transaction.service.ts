@@ -111,7 +111,7 @@ export class TransactionService {
         //       `;
 
         
-       var query=`select * from borrower_trans_return where Date(ReturnDate)<=curdate() and IsTreasurerApproved=0 and IsAdminApproved=0
+       var query=`select * from borrower_trans_return where Date(ReturnDate)<=curdate() and IsTreasurerApproved=0 and IsAdminApproved=0 and borrowerid=${borrowerId} 
        `;
           let data=await _manager.query(query);
           
@@ -248,9 +248,12 @@ export class TransactionService {
         {
             try{
                 
+            const _manager=getManager();
                 entity.createdAt=new Date();
-                this._borrowerTransReturn.create(entity);
-                this._borrowerTransReturn.save(entity);
+               // this._borrowerTransReturn.create(entity);
+                //this._borrowerTransReturn.save(entity);
+            var query=`Update borrower_trans_return set Role='${entity.Role}' ,RoleId=${entity.RoleId},Remark='${entity.Remark}' where borrowerid=${entity.borrowerid} and tranid=${entity.tranId}`;
+            _manager.query(query);
                 return{
                     message:"Transaction Made Sucessfully",
                     status:true

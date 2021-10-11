@@ -344,7 +344,10 @@ export class AdminController {
     }
 
     
-
+    // @Get('/figCOnvert/:fig')
+    // figToWords(@Param('fig')fig:number):Promise<borrower[]>{
+    //     return this._adminService.ConvertWords(fig);
+    // }
     
     
     // (@Body()model:ApproveTrans)

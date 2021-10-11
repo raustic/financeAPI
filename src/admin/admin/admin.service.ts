@@ -13,6 +13,7 @@ import { collector } from '../collector.entity';
 import { lender } from '../lender.entity';
 import { TransactionService } from '../transaction/transaction.service';
 import { Treasurer } from '../treasurer.entity';
+import { ToWords } from 'to-words';
 
 @Injectable()
 export class AdminService {
@@ -541,19 +542,9 @@ async GetTreasuerers(id:number):Promise<any>
        
         const _manager=getManager();
         var query=`
-        select A.*,B.* from borrowertrans as A join borrower as B on A.borrowerId=B.id
-         where returndate1=curdate() or
-        returndate2=curdate() or
-        returndate3=curdate() or
-        returndate4=curdate() or
-        returndate5=curdate() or
-        returndate6=curdate() or
-        returndate7=curdate() or
-        returndate8=curdate() or
-        returndate9=curdate() or
-        returndate10=curdate() or
-        returndate11=curdate() or
-        returndate12=curdate() `;
+        
+        select A.*,B.* from borrower_trans_return as A join borrower as B on A.borrowerId=B.id
+        where returndate<=curdate() and IsTreasurerApproved=0`;
         
         var data=await _manager.query(query);
         var retData={
@@ -766,9 +757,9 @@ async SaveImage(dto:imageUploadDto):Promise<any>
 
     async ConvertWords(fig:number):Promise<any>
     {
-        var convertRupeesIntoWords = require('convert-rupees-into-words');
-        var output = convertRupeesIntoWords(fig);
-        return output;
+        const toWords = new ToWords();
+        let words = toWords.convert(fig, { currency: true });
+        return words;
     }
 
 

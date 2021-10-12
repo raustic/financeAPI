@@ -45,11 +45,19 @@ export class borrowerTransReturn{
     @Column()
     @ApiProperty()
     RoleId:number
+    @Column()
+    @ApiProperty()
+    IsColtApproved:number
+   // @Column()
+   // IsCollectorApproved:number
     @ApiProperty()
     @Column()
     IsTreasurerApproved:number
     @Column()
     IsAdminApproved:number
+    @Column()
+    @ApiProperty()
+    paymentMode:string
     
    
     

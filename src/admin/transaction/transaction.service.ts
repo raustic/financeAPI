@@ -252,7 +252,8 @@ export class TransactionService {
                 entity.createdAt=new Date();
                // this._borrowerTransReturn.create(entity);
                 //this._borrowerTransReturn.save(entity);
-            var query=`Update borrower_trans_return set Role='${entity.Role}' ,RoleId=${entity.RoleId},Remark='${entity.Remark}' where borrowerid=${entity.borrowerid} and tranid=${entity.tranId}`;
+            var query=`Update borrower_trans_return set Role='${entity.Role}' ,RoleId=${entity.RoleId},Remark='${entity.Remark}',
+            paymentMode='${entity.paymentMode}',IsColtApproved=1 where borrowerid=${entity.borrowerid} and tranid=${entity.tranId} and id=${entity.id}`;
             _manager.query(query);
                 return{
                     message:"Transaction Made Sucessfully",
@@ -448,28 +449,39 @@ export class TransactionService {
         if(model.role=="c")
         {
             //get disaaprove status data
-            if(model.TranStaus==0)
+            if(model.TranStaus==-1)
             {
                 query=`
-                select A.*,B.name as BorrowerName,B.mobile borrowerMobile,B.addressLine1 as BorrowerAddress,A.IsTreasurerApproved,A.IsAdminApproved,c.name as collector,c.mobile as collectormobile from borrower_trans_return as A join borrower as B on A.borrowerId=B.Id join collector as c on A.RoleId=c.id where A.Role='c' and RoleId=${model.roleId} and IsTreasurerApproved=${model.TranStaus}`;
+                select A.*,B.name as BorrowerName,B.mobile borrowerMobile,B.addressLine1 as BorrowerAddress,A.IsTreasurerApproved,A.IsAdminApproved,c.name as collector,c.mobile as collectormobile from borrower_trans_return as A join borrower as B on A.borrowerId=B.Id join collector as c on A.RoleId=c.id where A.Role='c' and RoleId=${model.roleId}  and IsColtApproved=0`;
+                console.log(query);
              var data=await _manager.query(query);    
             return {periodicData:Array(data).length>0?data:[data]};
             }
             //Get Approve data
-            if(model.TranStaus==1)
+            if(model.TranStaus==0)
             {
+                
                 query=`
-                select A.*,B.name as BorrowerName,B.mobile borrowerMobile,B.addressLine1 as BorrowerAddress,A.IsTreasurerApproved,A.IsAdminApproved,c.name as collector,c.mobile as collectormobile from borrower_trans_return as A join borrower as B on A.borrowerId=B.Id join collector as c on A.RoleId=c.id where A.Role='c' and RoleId=${model.roleId} and IsTreasurerApproved=${model.TranStaus}`;
+                select A.*,B.name as BorrowerName,B.mobile borrowerMobile,B.addressLine1 as BorrowerAddress,A.IsTreasurerApproved,A.IsAdminApproved,c.name as collector,c.mobile as collectormobile from borrower_trans_return as A join borrower as B on A.borrowerId=B.Id join collector as c on A.RoleId=c.id where A.Role='c' and RoleId=${model.roleId} and IsColtApproved=1 and IsTreasurerApproved=0`;
+                console.log(query);
                 var data=await _manager.query(query);    
                 return {periodicData:Array(data).length>0?data:[data]};
             }
-            
+            if(model.TranStaus==1)
+            {
+                
+                query=`
+                select A.*,B.name as BorrowerName,B.mobile borrowerMobile,B.addressLine1 as BorrowerAddress,A.IsTreasurerApproved,A.IsAdminApproved,c.name as collector,c.mobile as collectormobile from borrower_trans_return as A join borrower as B on A.borrowerId=B.Id join collector as c on A.RoleId=c.id where A.Role='c' and RoleId=${model.roleId} and IsColtApproved=1 and IsTreasurerApproved=1`;
+                console.log(query);
+                var data=await _manager.query(query);    
+                return {periodicData:Array(data).length>0?data:[data]};
+            }
             //Get Backline data
             if(model.TranStaus==2)
             {
                 query=`
                 select A.*,B.name as BorrowerName,B.mobile borrowerMobile,B.addressLine1 as BorrowerAddress,A.IsTreasurerApproved,A.IsAdminApproved,c.name as collector,c.mobile as collectormobile from borrower_trans_return as A join borrower as B on A.borrowerId=B.Id join collector as c on A.RoleId=c.id where A.Role='c' and RoleId=${model.roleId} and IsTreasurerApproved=${model.TranStaus}`;
-               
+                console.log(query);
                 var data=await _manager.query(query);    
                 return {periodicData:Array(data).length>0?data:[data]};
             }

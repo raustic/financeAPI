@@ -26,6 +26,7 @@ import { periodicTransHistory } from 'src/periodicTransHistory';
 import { approveTrans } from './transaction/ApproveDataModel';
 import { ApproveTrans } from './transaction/ApproveTransModel';
 import { UpdateBalModel } from 'src/updateOpeningBalModel';
+import { updateDateModel } from 'src/updateDateModel';
 
 
 @Controller('admin')
@@ -350,12 +351,21 @@ export class AdminController {
     }
     
     
-    // (@Body()model:ApproveTrans)
-    // {
-
-    // }
     
-
+    
+    @Get('/cases/:statusOrId')
+    Getcases(@Param('statusOrId')statusOrId:number):Promise<borrower[]>{
+        return this._transService.GetAllCases(statusOrId);
+    }
+    @Get('/casesDates/:caseId')
+    CaseDates(@Param('caseId')caseId:string):Promise<borrower[]>{
+        return this._transService.caseReturnDate(caseId);
+    }
+    @Post('/UpdatdeCaseDate')
+    UpdateCaseDates(@Body()data:updateDateModel)
+    {
+        return this._transService.updateReturnDates(data);
+    }
     
 
 }

@@ -19,6 +19,7 @@ import { lendertrans } from '../lendertrans.entity';
 import { approveTrans } from './ApproveDataModel';
 import { ApproveTrans } from './ApproveTransModel';
 import { OpeningBal } from './openingBal.entity';
+import { updateDateModel } from 'src/updateDateModel';
 
 
 @Injectable()
@@ -110,8 +111,9 @@ export class TransactionService {
         //     and (ReturnDate1<curdate() or ReturnDate2<curdate() or ReturnDate3<curdate() or ReturnDate3<curdate() or ReturnDate4<curdate() or ReturnDate4<curdate() or ReturnDate5<curdate() or ReturnDate6<curdate())  
         //       `;
 
-        
-       var query=`select * from borrower_trans_return where Date(ReturnDate)<=curdate() and IsTreasurerApproved=0 and IsAdminApproved=0 and borrowerid=${borrowerId} 
+        // var query=`select * from borrower_trans_return where Date(ReturnDate)<=curdate() and IsTreasurerApproved=0 and IsAdminApproved=0 and borrowerid=${borrowerId} 
+        // `;  
+       var query=`select * from borrower_trans_return where IsTreasurerApproved=0 and IsAdminApproved=0 and borrowerid=${borrowerId} 
        `;
           let data=await _manager.query(query);
           
@@ -131,9 +133,9 @@ export class TransactionService {
     async GetBorrowerAllTransaction(borrowerId:number):Promise<any[]>
     {
         const _manager=getManager();
-        var query=`select amount,date_format(ReturnDate,'%d-%m-%Y') as ReturnDate,'give'as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrowertrans where borrowerid=${borrowerId}
+        var query=`select amount,'give'as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrowertrans where borrowerid=${borrowerId}
         union
-        select returnAmt,date_format(ReturnDate,'%d-%m-%Y') as  ReturnDate,'receive' as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrower_trans_return where borrowerid=${borrowerId} and IsTreasurerApproved=1 and IsAdminApproved=1
+        select returnAmt,'receive' as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrower_trans_return where borrowerid=${borrowerId} and IsTreasurerApproved=1 and IsAdminApproved=1
         `;
         var data=_manager.query(query);
         return data;
@@ -159,8 +161,8 @@ export class TransactionService {
                     {
                         
                         query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${i} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${i} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
                      _manager.query(query);
                         
                     }    
@@ -174,8 +176,8 @@ export class TransactionService {
                         
                         
                         query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
                      _manager.query(query);
                      interval+=7;
                         
@@ -188,8 +190,8 @@ export class TransactionService {
                         
                         
                         query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval1} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval1} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
                      _manager.query(query);
                         interval1+=10;
                     }     
@@ -201,8 +203,8 @@ export class TransactionService {
                         
                         
                         query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval2} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval2} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
                      _manager.query(query);
                         interval2+=20;
                     }     
@@ -212,8 +214,8 @@ export class TransactionService {
                     for(let i=1;i<=entity.terminDays;i++)   
                     {
                         query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval3} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval3} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
                      _manager.query(query);
                      interval3+=15;
                         
@@ -227,8 +229,8 @@ export class TransactionService {
                         
                         
                         query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.returnDate}", INTERVAL ${interval4} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0)`;
+                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval4} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
                      _manager.query(query);
                         interval4+=30;
                     }     
@@ -661,6 +663,64 @@ export class TransactionService {
          var data=await _manager.query(query);
          return data;
 
+    }
+
+    async GetAllCases(statusOrId:number)
+    {
+        const _manager=getManager();
+        let query:string;
+        let data:any;
+        //All Open Case
+        if(statusOrId==-1)
+        {
+            query=`select * from borrowertrans where IsOpen=0`;
+             data=await _manager.query(query);
+        }
+        //All Close Case
+        if(statusOrId==-2)
+        {
+            query=`select * from borrowertrans where IsOpen=1`;
+             data=await _manager.query(query);
+        }
+        //Case by Borrower id
+        if(statusOrId>0)
+        {
+            query=`select * from borrowertrans where borrowerid='${statusOrId}'`;
+             data=await _manager.query(query);
+        }
+        return data;
+
+        
+    }
+
+    async caseReturnDate(caseId:any):Promise<any>
+    {
+        const _manager=getManager();
+        let query=`select * from borrower_trans_return where caseid='${caseId}'`;
+       
+        let data=await _manager.query(query);
+        return data;
+    }
+    async updateReturnDates(data:updateDateModel)
+    {
+        try{
+            const _manager=getManager();
+        let query=`update borrower_trans_return set returnAmt=${data.returnAmt} ,returnDate='${data.returnDate}' where id=${data.id} and caseid='${data.caseId}'`
+        let data1=await _manager.query(query);
+      
+        return {
+            isSuccess:true,
+            message:"Record Updated Successfully"
+        };
+        }
+        catch(e) 
+        {
+            return{
+                isSuccess:false,
+                message:"Something Went Wrong"
+            };
+        }
+        
     }
     
 }

@@ -58,6 +58,9 @@ export class borrowerTransReturn{
     @Column()
     @ApiProperty()
     paymentMode:string
+    @Column()
+    @ApiProperty()
+    CaseId:string
     
    
     

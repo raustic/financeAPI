@@ -171,6 +171,7 @@ export class AdminController {
     @Post('GiveborrowerTrans')
     MakeborrowerTransactions(@Body()entity:borrowertrans):Promise<any>
     {
+        
         var _res=this._transService.CreateBorrowerTrans(entity);
         return _res;
     }

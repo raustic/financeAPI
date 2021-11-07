@@ -103,6 +103,13 @@ export class borrowertrans{
     @ApiProperty()
     @Column()
     IsOpen:number
-
-    
+    @Column()
+    @ApiProperty()
+    totalemi:number   
+    @Column()
+    @ApiProperty()
+    emiamt:number
+    @Column()
+    @ApiProperty()
+    caseUpto:number   
 }

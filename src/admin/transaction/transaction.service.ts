@@ -143,6 +143,7 @@ export class TransactionService {
     
 
     async CreateBorrowerTrans(entity:borrowertrans):Promise<any>{
+
         var  _res=new ResponseMessage();
         
             const _manager=getManager();
@@ -151,92 +152,100 @@ export class TransactionService {
             
             this._borrowerTrans.create(entity);
           let data=await  this._borrowerTrans.save(entity);
-            
-
-            let query='';
-            switch(entity.term) 
+          let query='';
+          let termDays=entity.terminDays;
+            for(let i=0;i<entity.totalemi;i++)
             {
-                case '1':
-                    for(let i=0;i<entity.terminDays;i++)   
-                    {
+                query=`insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+                        values(${data.id},${entity.borrowerid},${entity.emiamt},DATE_ADD("${entity.givenDate}", INTERVAL ${termDays} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+                          _manager.query(query);
+                          termDays+=entity.terminDays;
+            }
+
+            // let query='';
+            // switch(entity.term) 
+            // {
+            //     case '1':
+            //         for(let i=0;i<entity.terminDays;i++)   
+            //         {
                         
-                        query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${i} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
-                     _manager.query(query);
+            //             query=`
+            //             insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+            //             values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${i} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+            //          _manager.query(query);
                         
-                    }    
-                break;
+            //         }    
+            //     break;
                 
-                case '7':
-                    console.log("im in 7 case");
-                    let interval=0;
-                    for(let i=1;i<=entity.terminDays;i++)   
-                    {
+            //     case '7':
+            //         console.log("im in 7 case");
+            //         let interval=0;
+            //         for(let i=1;i<=entity.terminDays;i++)   
+            //         {
                         
                         
-                        query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
-                     _manager.query(query);
-                     interval+=7;
+            //             query=`
+            //             insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+            //             values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+            //          _manager.query(query);
+            //          interval+=7;
                         
-                    }       
-                break;
-                case '10':
-                    let interval1=0;
-                    for(let i=1;i<=entity.terminDays;i++)   
-                    {
-                        
-                        
-                        query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval1} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
-                     _manager.query(query);
-                        interval1+=10;
-                    }     
-                break;
-                case '20':
-                    let interval2=0;
-                    for(let i=1;i<=entity.terminDays;i++)   
-                    {
+            //         }       
+            //     break;
+            //     case '10':
+            //         let interval1=0;
+            //         for(let i=1;i<=entity.terminDays;i++)   
+            //         {
                         
                         
-                        query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval2} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
-                     _manager.query(query);
-                        interval2+=20;
-                    }     
-                break;
-                case '15':
-                    let interval3=0;
-                    for(let i=1;i<=entity.terminDays;i++)   
-                    {
-                        query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval3} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
-                     _manager.query(query);
-                     interval3+=15;
+            //             query=`
+            //             insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+            //             values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval1} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+            //          _manager.query(query);
+            //             interval1+=10;
+            //         }     
+            //     break;
+            //     case '20':
+            //         let interval2=0;
+            //         for(let i=1;i<=entity.terminDays;i++)   
+            //         {
                         
-                    }     
-                break;
-                case '30':
+                        
+            //             query=`
+            //             insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+            //             values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval2} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+            //          _manager.query(query);
+            //             interval2+=20;
+            //         }     
+            //     break;
+            //     case '15':
+            //         let interval3=0;
+            //         for(let i=1;i<=entity.terminDays;i++)   
+            //         {
+            //             query=`
+            //             insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+            //             values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval3} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+            //          _manager.query(query);
+            //          interval3+=15;
+                        
+            //         }     
+            //     break;
+            //     case '30':
                     
-                    let interval4=0;
-                    for(let i=1;i<=entity.terminDays;i++)   
-                    {
+            //         let interval4=0;
+            //         for(let i=1;i<=entity.terminDays;i++)   
+            //         {
                         
                         
-                        query=`
-                        insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
-                        values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval4} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
-                     _manager.query(query);
-                        interval4+=30;
-                    }     
-                break;
-            } 
-            _res.status=true;
+            //             query=`
+            //             insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
+            //             values(${data.id},${entity.borrowerid},${entity.returnAmt/entity.terminDays},DATE_ADD("${entity.givenDate}", INTERVAL ${interval4} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+            //          _manager.query(query);
+            //             interval4+=30;
+            //         }     
+            //     break;
+            // } 
+             _res.status=true;
             _res.message="Borrower Transaction Made Successfully";
         }
         catch(e){

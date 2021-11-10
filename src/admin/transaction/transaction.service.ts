@@ -20,7 +20,7 @@ import { approveTrans } from './ApproveDataModel';
 import { ApproveTrans } from './ApproveTransModel';
 import { OpeningBal } from './openingBal.entity';
 import { updateDateModel } from 'src/updateDateModel';
-
+import { Guid } from 'guid-typescript';
 
 @Injectable()
 export class TransactionService {
@@ -144,6 +144,8 @@ export class TransactionService {
 
     async CreateBorrowerTrans(entity:borrowertrans):Promise<any>{
 
+        
+        entity.CaseId=Guid.create().toString().substr(0,6).toUpperCase();
         var  _res=new ResponseMessage();
         
             const _manager=getManager();
@@ -705,7 +707,7 @@ export class TransactionService {
     async caseReturnDate(caseId:any):Promise<any>
     {
         const _manager=getManager();
-        let query=`select * from borrower_trans_return where caseid='${caseId}'`;
+        let query=`select * from borrower_trans_return where caseid='${caseId}' order by ReturnDate`;
        
         let data=await _manager.query(query);
         return data;

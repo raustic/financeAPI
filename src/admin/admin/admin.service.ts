@@ -144,7 +144,7 @@ export class AdminService {
                 // ((select ifnull(sum(returnAmt),0) from borrowertrans where borrowerid=A.id)-(select  ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.id and IsAdminApproved=1 and IsTreasurerApproved=1))as Bal
                 //  from borrower as A order by name`; 
                 var query=`select id,name,watsappnumber,email,mobile,addressline1,addressline2,zip,state,referencedBy,createdBy,date_format(createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,isactive,designation,profileImg,aadharfrontimg,aadharbackimg,otherimg,
-                (select sum(returnAmt) from borrower_trans_return where borrowerid=5 and isAdminApproved=0 and IsTreasurerApproved=0)as Bal
+                (select ifnull(sum(returnAmt),0) from borrower_trans_return where  isAdminApproved=0 and IsTreasurerApproved=0 and borrowerid=A.id)as Bal
                   from borrower as A order by name`;  
                     const user=await _manager.query(query);
                      
@@ -157,11 +157,14 @@ export class AdminService {
                     }
                 break;
                 case 'za':
-                    var query1=`
-                    select A.id,A.name,A.watsappnumber,A.email,A.mobile,A.addressline1,A.addressline2,A.zip,A.state,A.referencedBy,A.createdBy,date_format(A.createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,A.isactive,A.designation,A.profileImg,A.aadharfrontimg,A.aadharbackimg,A.otherimg,
-                    ((select ifnull(sum(returnAmt),0) from borrowertrans where borrowerid=A.id)-(select  ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.id and IsAdminApproved=1 and IsTreasurerApproved=1))as Bal
-                    from borrower as A order by name desc  
-                                   `;
+                    // var query1=`
+                    // select A.id,A.name,A.watsappnumber,A.email,A.mobile,A.addressline1,A.addressline2,A.zip,A.state,A.referencedBy,A.createdBy,date_format(A.createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,A.isactive,A.designation,A.profileImg,A.aadharfrontimg,A.aadharbackimg,A.otherimg,
+                    // ((select ifnull(sum(returnAmt),0) from borrowertrans where borrowerid=A.id)-(select  ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=A.id and IsAdminApproved=1 and IsTreasurerApproved=1))as Bal
+                    // from borrower as A order by name desc  
+                    //                `;
+                    var query1=`select id,name,watsappnumber,email,mobile,addressline1,addressline2,zip,state,referencedBy,createdBy,date_format(createdAt,'%d-%m-%Y %H:%i:%s')as createdAt ,isactive,designation,profileImg,aadharfrontimg,aadharbackimg,otherimg,
+                (select ifnull(sum(returnAmt),0) from borrower_trans_return where  isAdminApproved=0 and IsTreasurerApproved=0 and borrowerid=A.id)as Bal
+                  from borrower as A order by name desc`;  
                        const user1=await _manager.query(query1);
                      
                     if(Array(user1).length>0)

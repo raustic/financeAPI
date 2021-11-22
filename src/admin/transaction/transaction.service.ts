@@ -668,9 +668,9 @@ export class TransactionService {
         
         const _manager=getManager();
         let query=`select 
-     amount-(select sum(amount) from borrowertrans)+Ifnull((select sum(returnAmt) from borrower_trans_return where IsAdminApproved=1),0) as Opening,
-     (select sum(amount) from borrowertrans) as Closing
-      from opening_bal `;
+        amount-Ifnull((select sum(amount) from borrowertrans),0)+Ifnull((select sum(returnAmt) from borrower_trans_return where IsAdminApproved=1),0) as Opening,
+        (select sum(amount) from borrowertrans) as Closing
+         from opening_bal `;
          var data=await _manager.query(query);
          return data;
 

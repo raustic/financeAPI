@@ -169,8 +169,8 @@ export class TransactionService {
                         //console.log(query);
                           _manager.query(query);
 
-                          termDays+=entity.terminDays;
-                         // console.log(termDays);
+                          termDays+=parseInt(entity.term);
+                          console.log(termDays);
             }
 
             // let query='';

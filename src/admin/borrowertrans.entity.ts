@@ -111,7 +111,6 @@ export class borrowertrans{
     emiamt:number
     @Column()
     @ApiProperty()
-    caseUpto:number  
-    @Column()
-    newGivenDate:string 
+    caseUpto:number
+    
 }

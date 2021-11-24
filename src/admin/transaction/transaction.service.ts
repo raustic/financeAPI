@@ -150,9 +150,6 @@ export class TransactionService {
         
             const _manager=getManager();
 
-            //entity.givenDate=new Date(entity.newGivenDate);
-            
-            
         try{
             
             this._borrowerTrans.create(entity);

@@ -21,6 +21,7 @@ import { ApproveTrans } from './ApproveTransModel';
 import { OpeningBal } from './openingBal.entity';
 import { updateDateModel } from 'src/updateDateModel';
 import { Guid } from 'guid-typescript';
+import { parse } from 'path';
 
 @Injectable()
 export class TransactionService {
@@ -155,13 +156,21 @@ export class TransactionService {
             this._borrowerTrans.create(entity);
           let data=await  this._borrowerTrans.save(entity);
           let query='';
-          let termDays=entity.terminDays;
+          let termDays=parseInt(entity.term);
+         // entity.givenDate=new Date(`"${entity.newGivenDate}"`);
+          let newDate=new Date(entity.newGivenDate);
+          let month=newDate.getMonth();
+          let formatDate=newDate.getFullYear()+"-"+month+"-"+newDate.getDay()
             for(let i=0;i<entity.totalemi;i++)
             {
+               // console.log("New Dat"+formatDate)
                 query=`insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
-                        values(${data.id},${entity.borrowerid},${entity.emiamt},DATE_ADD("${entity.givenDate}", INTERVAL ${termDays} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+                        values(${data.id},${entity.borrowerid},${entity.emiamt},ADDDATE("${formatDate}", INTERVAL ${termDays} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+                        //console.log(query);
                           _manager.query(query);
+
                           termDays+=entity.terminDays;
+                         // console.log(termDays);
             }
 
             // let query='';

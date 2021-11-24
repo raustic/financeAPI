@@ -112,5 +112,7 @@ export class borrowertrans{
     @Column()
     @ApiProperty()
     caseUpto:number
-    
+    @ApiProperty()
+    @Exclude()
+    newGivenDate:string
 }

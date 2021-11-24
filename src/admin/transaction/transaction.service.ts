@@ -150,7 +150,8 @@ export class TransactionService {
         
             const _manager=getManager();
 
-            console.log(new Date(entity.newGivenDate));
+            entity.givenDate=new Date(entity.newGivenDate);
+            
             
         try{
             

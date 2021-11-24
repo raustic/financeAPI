@@ -39,62 +39,62 @@ export class borrowertrans{
     @ApiProperty()
     createdBy:string
     @Column()
-    @ApiProperty()
-    Partner1Mobile:string
-    @Column()
-    @ApiProperty()
-    Partner1Name:string
-    @Column()
-    @ApiProperty()
-    Partner1Amount:string
-    @Column()
-    @ApiProperty()
-    Partner1PerOrRate:string
-    @ApiProperty()
-    Partner2Mobile:string
-    @Column()
-    @ApiProperty()
-    Partner2Name:string
-    @Column()
-    @ApiProperty()
-    Partner2Amount:string
-    @Column()
-    @ApiProperty()
-    Partner2PerOrRate:string
-    @ApiProperty()
-    Partner3Mobile:string
-    @Column()
-    @ApiProperty()
-    Partner3Name:string
-    @Column()
-    @ApiProperty()
-    Partner3Amount:string
-    @Column()
-    @ApiProperty()
-    Partner3PerOrRate:string
-    @ApiProperty()
-    Partner4Mobile:string
-    @Column()
-    @ApiProperty()
-    Partner4Name:string
-    @Column()
-    @ApiProperty()
-    Partner4Amount:string
-    @Column()
-    @ApiProperty()
-    Partner4PerOrRate:string
-    @ApiProperty()
-    Partner5Mobile:string
-    @Column()
-    @ApiProperty()
-    Partner5Name:string
-    @Column()
-    @ApiProperty()
-    Partner5Amount:string
-    @Column()
-    @ApiProperty()
-    Partner5PerOrRate:string
-    @ApiProperty()
+   // @ApiProperty()
+    //Partner1Mobile:string
+    //@Column()
+    //@ApiProperty()
+    //Partner1Name:string
+    //@Column()
+    //@ApiProperty()
+    //Partner1Amount:string
+   // @Column()
+   // @ApiProperty()
+    //Partner1PerOrRate:string
+   // @ApiProperty()
+   // Partner2Mobile:string
+    //@Column()
+    //@ApiProperty()
+    //Partner2Name:string
+    //@Column()
+    //@ApiProperty()
+    //Partner2Amount:string
+    //@Column()
+    //@ApiProperty()
+    //Partner2PerOrRate:string
+   // @ApiProperty()
+    //Partner3Mobile:string
+    //@Column()
+    //@ApiProperty()
+    //Partner3Name:string
+    //@Column()
+    //@ApiProperty()
+    //Partner3Amount:string
+    //@Column()
+    //@ApiProperty()
+    //Partner3PerOrRate:string
+    //@ApiProperty()
+    //Partner4Mobile:string
+    //@Column()
+    //@ApiProperty()
+    //Partner4Name:string
+    //@Column()
+    //@ApiProperty()
+    //Partner4Amount:string
+    //@Column()
+    //@ApiProperty()
+    //Partner4PerOrRate:string
+    //@ApiProperty()
+    //Partner5Mobile:string
+    //@Column()
+    //@ApiProperty()
+    //Partner5Name:string
+    //@Column()
+    //@ApiProperty()
+    //Partner5Amount:string
+    //@Column()
+    //@ApiProperty()
+    //Partner5PerOrRate:string
+    //@ApiProperty()
     @Column()
     @ApiProperty()
     Role:string

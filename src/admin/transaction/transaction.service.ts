@@ -150,7 +150,7 @@ export class TransactionService {
         
             const _manager=getManager();
 
-            entity.givenDate=new Date(entity.newGivenDate);
+            //entity.givenDate=new Date(entity.newGivenDate);
             
             
         try{
@@ -652,13 +652,13 @@ export class TransactionService {
         //0 for admin approval 
         if(model.roleid==0)
         {
-            query=`update borrower_trans_return set IsAdminApproved=${model.transStatus} where Id=${model.transId} and borrowerid=${model.borrowerId}`;
+            query=`update borrower_trans_return set IsAdminApproved=${model.transStatus},ApprovedDate=curdate() where Id=${model.transId} and borrowerid=${model.borrowerId}`;
             message="Admin Approved Transaction.";
         }
         //1 for treasurer approval
         if(model.roleid==1)
         {
-            query=`update borrower_trans_return set IsTreasurerApproved=${model.transStatus} where Id=${model.transId} and borrowerid=${model.borrowerId}`;
+            query=`update borrower_trans_return set IsTreasurerApproved=${model.transStatus},ApprovedDate=curdate() where Id=${model.transId} and borrowerid=${model.borrowerId}`;
             message="Treasurer Approved the Transaction";
         }
         let data=await _manager.query(query);
@@ -670,10 +670,20 @@ export class TransactionService {
     {
         
         const _manager=getManager();
-        let query=`select 
-        amount-Ifnull((select sum(amount) from borrowertrans),0)+Ifnull((select sum(returnAmt) from borrower_trans_return where IsAdminApproved=1),0) as Opening,
-        (select sum(amount) from borrowertrans) as Closing
-         from opening_bal `;
+        // let query=`select 
+        // amount-Ifnull((select sum(amount) from borrowertrans),0)+Ifnull((select sum(returnAmt) from borrower_trans_return where IsAdminApproved=1),0) as Opening,
+        // (select sum(amount) from borrowertrans) as Closing
+        //  from opening_bal `;
+        let query=`
+        select amount+
+        (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')=curdate() and IsTreasurerApproved=1 and IsAdminApproved=1 and IsColtApproved=1)
+         -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate()) as OpenBal,
+         (select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')=curdate()) as ClosingBal,
+         amount+
+        (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')=curdate() and IsTreasurerApproved=1 and IsAdminApproved=1 and IsColtApproved=1)
+         -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate())-(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')=curdate())  as CurrentBal
+          from opening_bal
+        `;
          var data=await _manager.query(query);
          return data;
 

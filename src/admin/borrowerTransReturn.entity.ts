@@ -61,7 +61,8 @@ export class borrowerTransReturn{
     @Column()
     @ApiProperty()
     CaseId:string
-    
+    @Column()
+    ApprovedDate:Date
    
     
 }

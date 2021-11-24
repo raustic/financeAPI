@@ -149,6 +149,8 @@ export class TransactionService {
         var  _res=new ResponseMessage();
         
             const _manager=getManager();
+
+            console.log(new Date(entity.newGivenDate));
             
         try{
             

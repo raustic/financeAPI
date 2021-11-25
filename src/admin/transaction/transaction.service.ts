@@ -159,18 +159,21 @@ export class TransactionService {
           let termDays=parseInt(entity.term);
          // entity.givenDate=new Date(`"${entity.newGivenDate}"`);
           let newDate=new Date(entity.newGivenDate);
-          let month=newDate.getMonth();
-          let formatDate=newDate.getFullYear()+"-"+month+"-"+newDate.getDay()
+         // let month=newDate.getMonth()+1;
+         // let formatDate=newDate.getFullYear()+"-"+month+"-"+newDate.getDay()
             for(let i=0;i<entity.totalemi;i++)
             {
-               // console.log("New Dat"+formatDate)
+                //console.log("New Dat"+newDate.toISOString())
+               //console.log(termDays);
                 query=`insert into borrower_trans_return(tranid,borrowerid,returnAmt,ReturnDate,Remark,CreatedAt,createdBy,role,roleid,isTreasurerApproved,IsAdminApproved,CaseId)
-                        values(${data.id},${entity.borrowerid},${entity.emiamt},ADDDATE("${formatDate}", INTERVAL ${termDays} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
+                        values(${data.id},${entity.borrowerid},${entity.emiamt},ADDDATE("${newDate.toISOString()}", INTERVAL ${termDays} DAY),'${entity.Remark}',curdate(),'${entity.createdBy}','${entity.Role}',${entity.RoleId},0,0,'${entity.CaseId}')`;
                         //console.log(query);
                           _manager.query(query);
-
+                var nextquery=`select adddate("${newDate}",interval ${termDays} day)`;
+                var data1=await _manager.query(nextquery);
+                //console.log(data1);
                           termDays+=parseInt(entity.term);
-                          console.log(termDays);
+                          
             }
 
             // let query='';

@@ -584,6 +584,11 @@ export class TransactionService {
                     select A.*,B.name as BorrowerName,B.mobile borrowerMobile,B.addressLine1 as BorrowerAddress,A.IsTreasurerApproved,A.IsAdminApproved,c.name as collector,c.mobile as collectormobile from borrower_trans_return as A join borrower as B on A.borrowerId=B.Id join collector as c on A.RoleId=c.id where   IsAdminApproved=${model.TranStaus}`;
                
                 }
+                if(parseInt(model.roleId)>0)
+                {
+                    query=`select A.*,B.name as BorrowerName,B.mobile borrowerMobile,B.addressLine1 as BorrowerAddress,A.IsTreasurerApproved,A.IsAdminApproved,c.name as collector,c.mobile as collectormobile from borrower_trans_return as A join borrower as B on A.borrowerId=B.Id join collector as c on A.RoleId=c.id where   IsAdminApproved=0 and IsColtApproved=1 and IsTreasurerApproved=1
+                    `;
+                }
              
             var data=await _manager.query(query);    
             return {periodicData:Array(data).length>0?data:[data]};

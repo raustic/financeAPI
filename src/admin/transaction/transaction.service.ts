@@ -431,11 +431,14 @@ export class TransactionService {
 
     async GetTransactionHistory():Promise<any>{
         const _manager=getManager();
-        var query=`
-                select amount,ReturnAmt,date_format(ReturnDate1,'%d-%m-%Y') as ReturnDate,'give'as TranType,B.name,B.mobile,B.id,B.designation from borrowertrans  as A join borrower as B on A.borrowerId=B.id
-                union
-                select returnAmt,ReturnAmt,date_format(ReturnDate,'%d-%m-%Y') as  ReturnDate,'receive' as TranType,B.name,B.mobile,B.id,B.designation from borrower_trans_return as A join borrower as B on A.borrowerId=B.id`;
-       return _manager.query(query);
+    //     var query=`
+    //             select amount,ReturnAmt,date_format(ReturnDate1,'%d-%m-%Y') as ReturnDate,'give'as TranType,B.name,B.mobile,B.id,B.designation from borrowertrans  as A join borrower as B on A.borrowerId=B.id
+    //             union
+    //             select returnAmt,ReturnAmt,date_format(ReturnDate,'%d-%m-%Y') as  ReturnDate,'receive' as TranType,B.name,B.mobile,B.id,B.designation from borrower_trans_return as A join borrower as B on A.borrowerId=B.id`;
+    var query=`
+    select returnAmt,ReturnAmt,date_format(ReturnDate,'%d-%m-%Y') as  ReturnDate,'receive' as TranType,B.name,B.mobile,B.id,B.designation,B.Name,B.Mobile 
+    from borrower_trans_return as A join borrower as B on A.borrowerId=B.id where A.IsTreasurerApproved=1 and A.IsColtApproved=1 and A.IsAdminApproved=1`
+    return _manager.query(query);
                 
     }
 

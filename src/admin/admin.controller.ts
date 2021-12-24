@@ -368,6 +368,12 @@ export class AdminController {
     {
         return this._transService.updateReturnDates(data);
     }
+
+    @Get('/DeleteCase/:caseId')
+    DeleteCase(@Param('caseId')caseId:string):Promise<any>
+    {
+        return this._transService.deleteCase(caseId);
+    }
     
 
 }

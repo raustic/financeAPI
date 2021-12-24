@@ -763,5 +763,28 @@ export class TransactionService {
         }
         
     }
+
+    async deleteCase(caseId:string)
+    {
+        try{
+            const _manager=getManager();
+        let query=`call SP_DeleteCase(${caseId})`
+        let data1=await _manager.query(query);
+        //console.log(JSON.stringify(data1));
+      
+        return {
+            isSuccess:true,
+            message:"Case Deleted Successfully"
+        };
+        }
+        catch(e) 
+        {
+            return{
+                isSuccess:false,
+                message:"Something Went Wrong"
+            };
+        }
+        
+    }
     
 }

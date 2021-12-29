@@ -6,5 +6,5 @@ export class imageUploadDto{
     @ApiProperty()
     mobile:string
     @ApiProperty()
-    type:number
+    type:string
 }

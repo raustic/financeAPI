@@ -667,7 +667,7 @@ async SaveImage(dto:imageUploadDto):Promise<any>
     var path ='./public/';
     
         //1 for profile image
-    if(dto.type==1)
+    if(dto.type=="1")
     {
             try{
                 let filename=`prf${dto.mobile}.png`
@@ -689,7 +689,7 @@ async SaveImage(dto:imageUploadDto):Promise<any>
                     });
             } 
         }
-        if(dto.type==2)
+        if(dto.type=="2")
         {
         //2 for aadhar front image
 
@@ -715,7 +715,7 @@ async SaveImage(dto:imageUploadDto):Promise<any>
             }
               
         //3 for aadhar back image
-        if(dto.type==3)
+        if(dto.type=="3")
         {
             try{
                 let filename=`adhb${dto.mobile}.png`
@@ -738,7 +738,7 @@ async SaveImage(dto:imageUploadDto):Promise<any>
             } 
         //4 for other image
        
-            if(dto.type==4)
+            if(dto.type=="4")
             {
             try{
                 let filename=`oth${dto.mobile}.png`

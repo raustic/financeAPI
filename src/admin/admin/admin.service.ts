@@ -703,7 +703,7 @@ async SaveImage(dto:imageUploadDto):Promise<any>
                 _manager.query(query);
                 return({
                      message:"Aadhar Front Image Saved Successfully",
-                     staus:true
+                     status:true
                  });
                 }
                 catch(e){
@@ -726,7 +726,7 @@ async SaveImage(dto:imageUploadDto):Promise<any>
                 _manager.query(query);
                 return({
                      message:"Aadhar Back Image Saved Successfully",
-                     staus:true
+                     status:true
                  });
                 }
                 catch(e){
@@ -749,7 +749,7 @@ async SaveImage(dto:imageUploadDto):Promise<any>
                 _manager.query(query);
                 return({
                      message:"Other  Image Saved Successfully",
-                     staus:true
+                     status:true
                  });
                 }
                 catch(e){

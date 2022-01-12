@@ -125,7 +125,7 @@ export class TransactionService {
     {
         const _manager=getManager();
         var query=`select (select sum(amount) from borrowertrans where borrowerid=${borrowerid}) as givenamt,
-        (select sum(returnAmt) from borrower_trans_return where borrowerid=${borrowerid} and isAdminApproved=0) as totalReturnAmt,
+        (select ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=${borrowerid} and isAdminApproved=1) as totalReturnAmt,
         (select ifnull(sum(returnAmt),0) from borrower_trans_return where borrowerid=${borrowerid} and isAdminApproved=1) as receivedamt
          from borrowertrans limit 1`;
          return _manager.query(query);

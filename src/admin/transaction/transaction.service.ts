@@ -114,7 +114,7 @@ export class TransactionService {
 
         // var query=`select * from borrower_trans_return where Date(ReturnDate)<=curdate() and IsTreasurerApproved=0 and IsAdminApproved=0 and borrowerid=${borrowerId} 
         // `;  
-       var query=`select * from borrower_trans_return where IsTreasurerApproved=0 and IsAdminApproved=0 and borrowerid=${borrowerId} 
+       var query=`select * from borrower_trans_return where IsAdminApproved=0 and borrowerid=${borrowerId} 
        `;
           let data=await _manager.query(query);
           

@@ -342,11 +342,11 @@ export class TransactionService {
     {
         try{
             var query=`
-            select A.*,B.* from borrowertrans as A join borrower as B on A.borrowerId=B.id
-             where returndate=curdate()`;
+            select A.*,B.* from borrower_trans_return as A join borrower as B on A.borrowerId=B.id
+             where A.returndate=curdate()`;
 
             var toadyOepning=`
-            select sum(amount) as opening from borrowertrans
+            select sum(returnAmt) as opening from borrower_trans_return
             where returndate=curdate()`;
            var tdyClosing=`
            select sum(returnAmt) as closing from borrower_trans_return where returndate=curdate()`;

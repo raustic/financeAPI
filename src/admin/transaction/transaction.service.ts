@@ -697,11 +697,11 @@ export class TransactionService {
         //  from opening_bal `;
         let query=`
         select amount+
-        (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')=curdate() and IsTreasurerApproved=1 and IsAdminApproved=1 and IsColtApproved=1)
+        (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')<curdate()  and IsAdminApproved=1 )
          -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate()) as OpenBal,
          (select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')=curdate()) as ClosingBal,
          amount+
-        (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')=curdate() and IsTreasurerApproved=1 and IsAdminApproved=1 and IsColtApproved=1)
+        (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')<=curdate()  and IsAdminApproved=1 )
          -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate())-(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')=curdate())  as CurrentBal
           from opening_bal
         `;

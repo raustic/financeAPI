@@ -341,9 +341,12 @@ export class TransactionService {
     async TodayFinanceDetails():Promise<any>
     {
         try{
-            var query=`
-            select A.*,B.* from borrower_trans_return as A join borrower as B on A.borrowerId=B.id
-             where A.returndate=curdate()`;
+            // var query=`
+            // select A.*,B.* from borrower_trans_return as A join borrower as B on A.borrowerId=B.id
+            //  where A.returndate=curdate()`;
+
+            var query=` select distinct A.*,B.* from borrower_trans_return as A join borrower as B on A.borrowerId=B.id
+            where A.returndate<=curdate() and A.IsAdminApproved=0`;
 
             var toadyOepning=`
             select sum(returnAmt) as opening from borrower_trans_return

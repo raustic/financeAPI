@@ -139,8 +139,8 @@ export class TransactionService {
     {
         const _manager=getManager();
         var query=`select amount,'give'as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrowertrans where borrowerid=${borrowerId}
-        union
-        select returnAmt,'receive' as TranType,date_format(createdAt,'%d-%m-%Y %H:%i:%s') as createdAt from borrower_trans_return where borrowerid=${borrowerId} and IsTreasurerApproved=1 and IsAdminApproved=1
+        union all
+        select returnAmt,'receive' as TranType,date_format(ApprovedDate,'%d-%m-%Y %H:%i:%s') as createdAt from borrower_trans_return where borrowerid=${borrowerId} and IsTreasurerApproved=1 and IsAdminApproved=1
         `;
         var data=_manager.query(query);
         return data;

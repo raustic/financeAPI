@@ -698,20 +698,34 @@ export class TransactionService {
         // amount-Ifnull((select sum(amount) from borrowertrans),0)+Ifnull((select sum(returnAmt) from borrower_trans_return where IsAdminApproved=1),0) as Opening,
         // (select sum(amount) from borrowertrans) as Closing
         //  from opening_bal `;
-        let query=`
+        // let query=`
         
+        // select amount+
+        // (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')<curdate()  and IsAdminApproved=1 )
+        //  -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate())-(
+        // select sum(amount) from borrowertrans) as OpenBal,
+        //  (select  ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(createdAt,'%Y-%m-%d')=curdate() and IsAdminApproved=1 ) as ClosingBal,
+        // (amount+(select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')<curdate()  and IsAdminApproved=1 )
+        //  -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate())+
+        //   (select  ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(createdAt,'%Y-%m-%d')=curdate() and IsAdminApproved=1 ))-
+        //   (select sum(amount) from borrowertrans)
+        //   as CurrentBal 
+        // from opening_bal
+        // `;
+
+        let query=`
         select amount+
-        (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')<curdate()  and IsAdminApproved=1 )
-         -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate())-(
-        select sum(amount) from borrowertrans) as OpenBal,
-         (select  ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(createdAt,'%Y-%m-%d')=curdate() and IsAdminApproved=1 ) as ClosingBal,
-        (amount+(select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')<curdate()  and IsAdminApproved=1 )
-         -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate())+
-          (select  ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(createdAt,'%Y-%m-%d')=curdate() and IsAdminApproved=1 ))-
-          (select sum(amount) from borrowertrans)
-          as CurrentBal 
-        from opening_bal
-        `;
+              ifnull((select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')<curdate()  and IsAdminApproved=1 )
+                -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate())-(
+               select sum(amount) from borrowertrans),0) as OpenBal,
+                (select  ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(createdAt,'%Y-%m-%d')=curdate() and IsAdminApproved=1 ) as ClosingBal,
+               (amount+
+               (select ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(ApprovedDate,'%Y-%m-%d')<curdate()  and IsAdminApproved=1 )
+                -(select  ifnull(sum(amount),0) from borrowertrans where date_format(createdAt,'%Y-%m-%d')>curdate())+
+                 (select  ifnull(sum(returnAmt),0) from borrower_trans_return where date_format(createdAt,'%Y-%m-%d')=curdate() and IsAdminApproved=1 ))-
+                 (select ifnull(sum(amount),0) from borrowertrans)
+                 as CurrentBal 
+               from opening_bal`;
          var data=await _manager.query(query);
          return data;
 
